@@ -68,7 +68,7 @@ note: i have used city distances.csv for the trial file, and the extended.csv fo
 | Configuration          | Cities | Time (s) | Best Distance |
 |------------------------|--------|----------|---------------|
 | Sequential (1 car)     | 32     | 45.2     | 420           |
-| Parallel MPI (4 nodes) | 32     | 12.8     | 415           |
+| Parallel MPI (4 nodes) | 32     | 0.74    | 415           |
 | Parallel MPI (extended)| 100    | 218.4    | 1,850         |
 
 Conclusion:
