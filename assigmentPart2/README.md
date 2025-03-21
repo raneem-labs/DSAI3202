@@ -62,8 +62,10 @@ The fitness function needs to be modified to handle the total distance for all c
 Population Representation:
 The population now consists of multiple sets of routes (one for each car). Each individual in the population represents a collection of routes for the cars, and the selection, crossover, and mutation processes are adjusted accordingly to handle this new structure.
 
+note: i have used city distances.csv for the trial file, and the extended.csv for the trial with 5 cars
 
 Conclusion:
+
 This script efficiently implements a genetic algorithm for solving the TSP. By parallelizing fitness evaluation (if implemented), we can further optimize performance. The multi-car adaptation (VRP) involves splitting routes across multiple vehicles and adjusting the fitness function to minimize the total distance traveled by all vehicles, a significant extension from the original TSP problem.
 
 
