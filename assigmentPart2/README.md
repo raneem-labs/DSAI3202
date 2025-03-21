@@ -65,11 +65,11 @@ The population now consists of multiple sets of routes (one for each car). Each 
 note: i have used city distances.csv for the trial file, and the extended.csv for the trial with 5 cars
 
 ## Performance Results  
-| Configuration          | Cities | Time (s) | Best Distance |
+| Configuration          | Cities | Time (s) | total Distance |
 |------------------------|--------|----------|---------------|
-| Sequential (1 car)     | 32     | 45.2     | 420           |
-| Parallel MPI (4 nodes) | 32     | 0.74    | 415           |
-| Parallel MPI (extended)| 100    | 218.4    | 1,850         |
+| Sequential (1 car)     | 32     | 45.2     |            |
+| Parallel MPI (4 nodes) | 32     | 0.72   | 784.0           |
+| Parallel MPI (extended)| 100    |0.77   | 764.0        |
 
 Conclusion:
 
