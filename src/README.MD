@@ -127,34 +127,38 @@ Impact of Backtracking: The original never went back (pure right-hand rule)
 Backtracking allowed for the discovery of better routes but added a small overhead.
 
 Trade-offs and Limitations
-
 Performance Trade-offs:
 Pros: Finds shorter paths, avoids redundant exploration
 Cons: Slightly lower moves/second due to additional decision logic
+
 Determinism vs Exploration:
 Original is perfectly deterministic (same input → same output)
 Enhanced makes probabilistic choices (different results each run)
+
 Memory Overhead:
 Enhanced version maintains visited cell matrix (O(n²) space)
 Original has no memory overhead beyond move history
+
 Parameter Sensitivity:
 Performance depends on tuning of:
 Right-turn bias (0.7 in our tests)
 Randomness factor (0.2 in our tests)
 Suboptimal parameters could degrade performance
+
 Complexity Trade-off:
 Original is simpler and easier to understand
 Enhanced has more complex logic but better results
 Analysis of Results
-
 The enhanced explorer demonstrates measurable improvements in path efficiency while introducing minimal overhead. The key benefits manifest in:
 
 Redundant Exploration Reduction:
 The visited cell tracking prevents re-exploration of known areas
 Accounts for the 7.6% reduction in visited cells
+
 Adaptive Pathfinding:
 Probabilistic choices help escape local minima
 Enables finding alternative routes when stuck
+
 Intelligent Backtracking:
 More targeted than the original's simple reversal
 Goes back to last meaningful decision point
@@ -163,6 +167,31 @@ The slight reduction in moves/second (1.7%) is outweighed by the significant red
 In conclusion:
 While keeping a manageable computational overhead, the improved explorer offers noticeable improvements over the original implementation. Better overall performance results from the trade-offs between exploration and determinism. The improved version is unquestionably better for applications where determining the best routes is more crucial than predictable behaviour.
 
+Key enhancements made to the visualization module:
+
+Comparative Visualizations:
+compare_explorers(): Side-by-side path comparison
+plot_performance_metrics(): Histograms comparing key metrics
+Improved Path Visualization:
+visualize_exploration(): Better path rendering with start/end markers
+Color-coded paths for clarity
+Statistical Analysis:
+Calculates and displays mean values for each metric
+Shows distribution of results across multiple runs
+Flexible Output:
+Saves visualizations to PNG files
+
+To use these new visualizations:
+from visualization import compare_explorers, plot_performance_metrics
+
+# After running both explorers
+compare_explorers(original_explorer.moves, enhanced_explorer.moves, maze)
+
+# After multiple runs
+plot_performance_metrics(original_stats_list, enhanced_stats_list)
+
+----------
+The visualizations will help clearly demonstrate the performance differences between the original and enhanced explorers, showing both the paths taken and the statistical distributions of key metrics.
 
 
 
