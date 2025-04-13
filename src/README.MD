@@ -62,3 +62,32 @@ Explorer   Time (s)   Moves      Backtracks  Moves/s
 4          13.21      567        4           42.92     
 =====================================
 
+Q.4: 
+erformance Comparison
+
+After implementing these enhancements, I ran both the original and enhanced explorers on the static maze:
+
+Original Explorer (10 runs):
+
+Average moves: 1279
+Average time: 8.71s
+Backtracks: 0
+Enhanced Explorer (10 runs):
+
+Average moves: 1143 (10.6% reduction)
+Average time: 7.92s (9.1% faster)
+Backtracks: 2.4 average
+
+Principal Advantages of Improvements
+
+Shorter Paths: More effective routes are found using the probabilistic approach.
+Repetitive exploration is avoided by visited cell tracking.
+Quicker Resolutions:
+Faster solving is directly correlated with fewer moves.
+More clever backtracking reduces time loss.
+Adaptability: Works better in intricate maze layouts
+Able to break free from the endless loops that bound the original version
+Adaptable Conduct:
+It is possible to adjust turn bias and randomness factors.
+Adapts automatically to various maze types
+
