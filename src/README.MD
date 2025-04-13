@@ -195,10 +195,10 @@ Saves visualizations to PNG files
 To use these new visualizations:
 from visualization import compare_explorers, plot_performance_metrics
 
-# After running both explorers
+ After running both explorers
 compare_explorers(original_explorer.moves, enhanced_explorer.moves, maze)
 
-# After multiple runs
+ After multiple runs
 plot_performance_metrics(original_stats_list, enhanced_stats_list)
 
 ----------
@@ -206,12 +206,12 @@ The visualizations will help clearly demonstrate the performance differences bet
 
 bonus points: 
 performance benchmarking: 
-# Run 100 times to verify top 10% performance
+Run 100 times to verify top 10% performance
 for i in {1..100}; do python main.py --type static --optimized --auto; done | grep "moves"
 
 Backtrack Verification:
 python main.py --type static --optimized --auto | grep "backtrack"
-# Should always show "Number of backtrack operations: 0"
+ Should always show "Number of backtrack operations: 0"
 
 Expected Output:
 Optimized solution found in 122 moves
