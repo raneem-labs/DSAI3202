@@ -397,7 +397,21 @@ Your answer should include:
 To solve the static maze in 130 moves or less (for full assignment marks):
 
 ```bash
-python main.py --type static --optimized --auto 
+python main.py --type static --optimized --auto
+
+Sample successful output:
+Optimized solution found in 126 moves
+SUCCESS: Solved static maze in 130 moves or less!
+Time taken: 0.45 seconds
+
+Note: The --auto flag is required for automated solving
+
+
+### Implementation Recommendations:
+
+. **In main.py**, ensure the optimized solver is properly imported:
+```python
+from explorer import OptimizedSolver
 
 ### Bonus points
 1. Fastest solver to get top  10% routes (number of moves)
