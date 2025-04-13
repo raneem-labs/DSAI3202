@@ -193,6 +193,20 @@ plot_performance_metrics(original_stats_list, enhanced_stats_list)
 ----------
 The visualizations will help clearly demonstrate the performance differences between the original and enhanced explorers, showing both the paths taken and the statistical distributions of key metrics.
 
+bonus points: 
+performance benchmarking: 
+# Run 100 times to verify top 10% performance
+for i in {1..100}; do python main.py --type static --optimized --auto; done | grep "moves"
+
+Backtrack Verification:
+python main.py --type static --optimized --auto | grep "backtrack"
+# Should always show "Number of backtrack operations: 0"
+
+Expected Output:
+Optimized solution found in 122 moves
+SUCCESS: Solved static maze in 130 moves or less!
+Number of backtrack operations: 0
+Time taken: 0.42 seconds
 
 
 
