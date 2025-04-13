@@ -282,7 +282,6 @@ Modify the main program to run multiple maze explorers simultaneously. This is b
 <details>
 <summary>📊 Raw Data Details</summary>
 
-```python
 performance_data = {
     "explorer_1": {"time": 12.45, "moves": 542, "backtracks": 3, "speed": 43.53},
     "explorer_2": {"time": 11.23, "moves": 512, "backtracks": 1, "speed": 45.59},
