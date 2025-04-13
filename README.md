@@ -279,8 +279,7 @@ Modify the main program to run multiple maze explorers simultaneously. This is b
 - **Consistency**: Move counts ranged 498-567 (12% variance)
 
 
-<details>
-<summary>📊 Raw Data Details</summary>
+ Raw Data Details: 
 
 performance_data = {
     "explorer_1": {"time": 12.45, "moves": 542, "backtracks": 3, "speed": 43.53},
