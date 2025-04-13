@@ -110,15 +110,20 @@ All tests were conducted on the same machine with:
 Python 3.8.5
 Pygame 2.0.1
 No background processes affecting performance
+## Performance Metrics Comparison
 
-Performance Metrics Comparison
+| Metric               | Original Explorer | Enhanced Explorer | Improvement  |
+|----------------------|-------------------|-------------------|--------------|
+| Average Moves        | 1,279            | 1,143             | 10.6% ↓      |
+| Average Time (sec)   | 8.71             | 7.92              | 9.1% ↓       |
+| Backtrack Operations | 0                | 2.4               | N/A          |
+| Moves/Second         | 146.8            | 144.3             | 1.7% ↓       |
+| Visited Cells        | 100%             | 92.4%             | 7.6% ↓       |
 
-Metric	       OriginalExplorer	EnhancedExplorer	Improvement
-AverageMoves	        1279	        1143	           10.6% ↓
-AverageTime(sec)    	8.71	        7.92	           9.1% ↓
-BacktrackOperations  	0	          2.4	              N/A
-Moves/Second	         146.8	      144.3	           1.7% ↓
-Visited Cells       	100%	         92.4%	          7.6% ↓
+**Key Improvements:**
+- Reduced average moves by **106 moves** (10.6% improvement)
+- **9.1% faster** solving time
+- Visited **7.6% fewer cells**, showing more efficient exploration
 
 
 Important Results:
