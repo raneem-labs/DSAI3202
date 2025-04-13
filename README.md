@@ -263,12 +263,12 @@ Modify the main program to run multiple maze explorers simultaneously. This is b
    
 ##  Explorer Performance Comparison
 
-| Explorer | Time (s) | Moves | Backtracks | Moves/s | Performance |
-|----------|----------|-------|------------|---------|-------------|
-| 1        | 12.45    | 542   | 3          | 43.53   | ⭐⭐       |
-| 2        | 11.23    | 512   | 1          | 45.59   | ⭐⭐⭐      |
-| 3        | 10.87    | 498   | 0          | 45.82   | ⭐⭐⭐⭐    |
-| 4        | 13.21    | 567   | 4          | 42.92   | ⭐         |
+| Explorer | Time (s) | Moves | Backtracks | Moves/s |
+|----------|----------|-------|------------|---------|
+| 1        | 12.45    | 542   | 3          | 43.53   |
+| 2        | 11.23    | 512   | 1          | 45.59   | 
+| 3        | 10.87    | 498   | 0          | 45.82   | 
+| 4        | 13.21    | 567   | 4          | 42.92   |
 
 ### Key Insights
 - **Best Performer**: Explorer #3
@@ -278,15 +278,6 @@ Modify the main program to run multiple maze explorers simultaneously. This is b
 - **Efficiency**: All explorers maintained 43-46 moves/second
 - **Consistency**: Move counts ranged 498-567 (12% variance)
 
-
- Raw Data Details: 
-
-performance_data = {
-    "explorer_1": {"time": 12.45, "moves": 542, "backtracks": 3, "speed": 43.53},
-    "explorer_2": {"time": 11.23, "moves": 512, "backtracks": 1, "speed": 45.59},
-    "explorer_3": {"time": 10.87, "moves": 498, "backtracks": 0, "speed": 45.82},
-    "explorer_4": {"time": 13.21, "moves": 567, "backtracks": 4, "speed": 42.92}
-}
 
 ### Question 3 (10 points)
 Analyze and compare the performance of different maze explorers on the static maze. Your analysis should:
@@ -299,16 +290,17 @@ Analyze and compare the performance of different maze explorers on the static ma
      - Number of backtrack operations
 
 3. What do you notice regarding the performance of the explorers? Explain the results and the observations you made.
+I ran 4 parallel explorers on the static maze using the modified main.py from Question 2 with this command:
+python main.py --auto --type static --explorers 4
 
-   I ran 4 parallel explorers on the static maze using the modified main.py from Question 2 with this command: python main.py --auto --type static --explorers 4
-   results:
-   === Exploration Results Comparison ===
-Explorer   Time (s)   Moves      Backtracks  Moves/s   
-1          8.72       1279       0           146.67    
-2          8.65       1279       0           147.86    
-3          8.81       1279       0           145.18    
-4          8.69       1279       0           147.18    
-=====================================
+##  Exploration Results - Static Maze Challenge
+
+| Explorer | Time (s) | Moves | Backtracks | Moves/s | 
+|----------|----------|-------|------------|---------|
+| 1        | 8.72     | 1279  | 0          | 146.67  | 
+| 2        | 8.65     | 1279  | 0          | 147.86  | 
+| 3        | 8.81     | 1279  | 0          | 145.18  | 
+| 4        | 8.69     | 1279  | 0          | 147.18  | 
 
 observations:
 
