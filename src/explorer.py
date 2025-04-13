@@ -1,14 +1,15 @@
 """
-Maze Explorer module that implements automated maze solving.
+Enhanced Maze Explorer with probabilistic path selection and visited cell tracking
 """
 
 import time
 import pygame
+import random
 from typing import Tuple, List, Optional, Deque
 from collections import deque
 from .constants import BLUE, WHITE, CELL_SIZE, WINDOW_SIZE
 
-class Explorer:
+class EnhancedExplorer:
     def __init__(self, maze, visualize: bool = False):
         self.maze = maze
         self.x, self.y = maze.start_pos
@@ -17,14 +18,21 @@ class Explorer:
         self.start_time = None
         self.end_time = None
         self.visualize = visualize
-        self.move_history = deque(maxlen=3)  # Keep track of last 3 moves
-        self.backtracking = False
-        self.backtrack_path = []
-        self.backtrack_count = 0  # Count number of backtrack operations
+        self.backtrack_count = 0
+        
+        # Enhancement 1: Probabilistic path selection parameters
+        self.right_turn_bias = 0.7  # 70% chance to prefer right turns
+        self.randomness_factor = 0.2  # 20% chance to make random choice
+        
+        # Enhancement 2: Visited cells tracking
+        self.visited = [[False for _ in range(maze.width)] for _ in range(maze.height)]
+        self.visited[self.y][self.x] = True
+        self.current_path = [(self.x, self.y)]
+        
         if visualize:
             pygame.init()
             self.screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
-            pygame.display.set_caption("Maze Explorer - Automated Solving")
+            pygame.display.set_caption("Enhanced Maze Explorer")
             self.clock = pygame.time.Clock()
 
     def turn_right(self):
@@ -37,82 +45,134 @@ class Explorer:
         x, y = self.direction
         self.direction = (y, -x)
 
-    def can_move_forward(self) -> bool:
-        """Check if we can move forward in the current direction."""
-        dx, dy = self.direction
+    def can_move(self, direction: Tuple[int, int]) -> bool:
+        """Check if we can move in the given direction."""
+        dx, dy = direction
         new_x, new_y = self.x + dx, self.y + dy
         return (0 <= new_x < self.maze.width and 
                 0 <= new_y < self.maze.height and 
                 self.maze.grid[new_y][new_x] == 0)
+
+    def get_possible_directions(self) -> List[Tuple[int, int]]:
+        """Return all possible directions to move."""
+        directions = []
+        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            if self.can_move((dx, dy)):
+                directions.append((dx, dy))
+        return directions
+
+    def choose_direction(self) -> Tuple[int, int]:
+        """
+        Enhanced direction selection with:
+        - Right-turn bias
+        - Randomness factor
+        - Visited cell avoidance
+        """
+        possible_dirs = self.get_possible_directions()
+        
+        # If only one direction, take it
+        if len(possible_dirs) == 1:
+            return possible_dirs[0]
+            
+        # Apply probabilistic selection
+        if random.random() < self.randomness_factor:
+            return random.choice(possible_dirs)
+            
+        # Prefer right turns with bias
+        self.turn_right()
+        if self.direction in possible_dirs:
+            if random.random() < self.right_turn_bias:
+                return self.direction
+        self.turn_left()  # Undo the right turn
+        
+        # Avoid recently visited cells when possible
+        unvisited_dirs = []
+        for dx, dy in possible_dirs:
+            new_x, new_y = self.x + dx, self.y + dy
+            if not self.visited[new_y][new_x]:
+                unvisited_dirs.append((dx, dy))
+        
+        if unvisited_dirs:
+            return random.choice(unvisited_dirs)
+        
+        # If all adjacent cells visited, choose randomly
+        return random.choice(possible_dirs)
 
     def move_forward(self):
         """Move forward in the current direction."""
         dx, dy = self.direction
         self.x += dx
         self.y += dy
-        current_move = (self.x, self.y)
-        self.moves.append(current_move)
-        self.move_history.append(current_move)
+        self.moves.append((self.x, self.y))
+        self.visited[self.y][self.x] = True
+        self.current_path.append((self.x, self.y))
+        
         if self.visualize:
             self.draw_state()
 
-    def is_stuck(self) -> bool:
-        """Check if the explorer is stuck in a loop."""
-        if len(self.move_history) < 3:
-            return False
-        # Check if the last 3 moves are the same
-        return (self.move_history[0] == self.move_history[1] == self.move_history[2])
-
     def backtrack(self) -> bool:
-        """Backtrack to the last position where we had multiple choices."""
-        if not self.backtrack_path:
-            # If we don't have a backtrack path, find one
-            self.backtrack_path = self.find_backtrack_path()
-        
-        if self.backtrack_path:
-            # Move to the next position in the backtrack path
-            next_pos = self.backtrack_path.pop()
-            self.x, self.y = next_pos
-            self.backtrack_count += 1
-            if self.visualize:
-                self.draw_state()
-            return True
+        """Enhanced backtracking using visited cell information."""
+        if len(self.current_path) < 2:
+            return False
+            
+        # Find the last position with unexplored options
+        for i in range(len(self.current_path) - 2, -1, -1):
+            x, y = self.current_path[i]
+            possible_dirs = []
+            for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                new_x, new_y = x + dx, y + dy
+                if (0 <= new_x < self.maze.width and 
+                    0 <= new_y < self.maze.height and 
+                    self.maze.grid[new_y][new_x] == 0 and 
+                    not self.visited[new_y][new_x]):
+                    possible_dirs.append((dx, dy))
+            
+            if possible_dirs:
+                # Backtrack to this position
+                self.x, self.y = x, y
+                self.direction = possible_dirs[0]  # Face first available direction
+                self.backtrack_count += 1
+                self.current_path = self.current_path[:i+1]
+                return True
+                
         return False
 
-    def find_backtrack_path(self) -> List[Tuple[int, int]]:
-        """Find a path back to a position with multiple choices."""
-        # Start from current position and go backwards through moves
-        path = []
-        current_pos = (self.x, self.y)
-        visited = set()
+    def solve(self) -> Tuple[float, List[Tuple[int, int]]]:
+        """Enhanced solving algorithm with probabilistic path selection and visited tracking."""
+        self.start_time = time.time()
         
-        # Look for a position where we had multiple choices
-        for i in range(len(self.moves) - 1, -1, -1):
-            pos = self.moves[i]
-            if pos in visited:
-                continue
-            visited.add(pos)
-            path.append(pos)
+        if self.visualize:
+            self.draw_state()
+        
+        while (self.x, self.y) != self.maze.end_pos:
+            self.direction = self.choose_direction()
+            self.move_forward()
             
-            # Check if this position had multiple choices
-            choices = self.count_available_choices(pos)
-            if choices > 1:
-                return path[::-1]  # Return reversed path
+            # If stuck, use enhanced backtracking
+            if len(self.moves) > 100 and len(set(self.moves[-100:])) < 10:
+                if not self.backtrack():
+                    # If backtracking fails, make a random move
+                    possible_dirs = self.get_possible_directions()
+                    if possible_dirs:
+                        self.direction = random.choice(possible_dirs)
         
-        return path[::-1]  # Return reversed path if no better position found
+        self.end_time = time.time()
+        time_taken = self.end_time - self.start_time
+        
+        if self.visualize:
+            pygame.time.wait(2000)
+            pygame.quit()
+            
+        print("\n=== Enhanced Explorer Statistics ===")
+        print(f"Total time taken: {time_taken:.2f} seconds")
+        print(f"Total moves made: {len(self.moves)}")
+        print(f"Number of backtrack operations: {self.backtrack_count}")
+        print(f"Average moves per second: {len(self.moves)/time_taken:.2f}")
+        print("===================================")
+            
+        return time_taken, self.moves
 
-    def count_available_choices(self, pos: Tuple[int, int]) -> int:
-        """Count the number of available moves from a position."""
-        x, y = pos
-        choices = 0
-        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            new_x, new_y = x + dx, y + dy
-            if (0 <= new_x < self.maze.width and 
-                0 <= new_y < self.maze.height and 
-                self.maze.grid[new_y][new_x] == 0):
-                choices += 1
-        return choices
-
+    # ... (rest of the visualization methods remain the same)
     def draw_state(self):
         """Draw the current state of the maze and explorer."""
         self.screen.fill(WHITE)
@@ -135,6 +195,20 @@ class Explorer:
                          self.maze.end_pos[1] * CELL_SIZE,
                          CELL_SIZE, CELL_SIZE))
         
+        # Draw visited cells
+        for y in range(self.maze.height):
+            for x in range(self.maze.width):
+                if self.visited[y][x] and (x,y) != self.maze.start_pos and (x,y) != self.maze.end_pos:
+                    pygame.draw.rect(self.screen, (200, 200, 255),
+                                   (x * CELL_SIZE, y * CELL_SIZE,
+                                    CELL_SIZE, CELL_SIZE))
+        
+        # Draw current path
+        for x, y in self.current_path[:-1]:  # Don't draw current position twice
+            pygame.draw.rect(self.screen, (150, 150, 255),
+                           (x * CELL_SIZE, y * CELL_SIZE,
+                            CELL_SIZE, CELL_SIZE))
+        
         # Draw explorer
         pygame.draw.rect(self.screen, BLUE,
                         (self.x * CELL_SIZE, self.y * CELL_SIZE,
@@ -145,70 +219,11 @@ class Explorer:
 
     def print_statistics(self, time_taken: float):
         """Print detailed statistics about the exploration."""
-        print("\n=== Maze Exploration Statistics ===")
+        print("\n=== Enhanced Maze Exploration Statistics ===")
         print(f"Total time taken: {time_taken:.2f} seconds")
         print(f"Total moves made: {len(self.moves)}")
         print(f"Number of backtrack operations: {self.backtrack_count}")
         print(f"Average moves per second: {len(self.moves)/time_taken:.2f}")
-        print("==================================\n")
-
-    def solve(self) -> Tuple[float, List[Tuple[int, int]]]:
-        """
-        Solve the maze using the right-hand rule algorithm with backtracking.
-        Returns the time taken and the list of moves made.
-        """
-        self.start_time = time.time()
-        
-        # Keep track of visited positions to detect loops
-        visited = set()
-        visited.add((self.x, self.y))
-        
-        if self.visualize:
-            self.draw_state()
-        
-        while (self.x, self.y) != self.maze.end_pos:
-            if self.is_stuck():
-                # If stuck, try backtracking
-                if not self.backtrack():
-                    # If backtracking fails, try a different direction
-                    self.turn_left()
-                    self.turn_left()  # Turn around
-                    self.move_forward()
-                self.backtracking = True
-            else:
-                self.backtracking = False
-                # Try to turn right first
-                self.turn_right()
-                if self.can_move_forward():
-                    self.move_forward()
-                    visited.add((self.x, self.y))
-                else:
-                    # If we can't move right, try forward
-                    self.turn_left()
-                    if self.can_move_forward():
-                        self.move_forward()
-                        visited.add((self.x, self.y))
-                    else:
-                        # If we can't move forward, try left
-                        self.turn_left()
-                        if self.can_move_forward():
-                            self.move_forward()
-                            visited.add((self.x, self.y))
-                        else:
-                            # If we can't move left, turn around
-                            self.turn_left()
-                            self.move_forward()
-                            visited.add((self.x, self.y))
-
-        self.end_time = time.time()
-        time_taken = self.end_time - self.start_time
-        
-        if self.visualize:
-            # Show final state for a few seconds
-            pygame.time.wait(2000)
-            pygame.quit()
-        
-        # Print detailed statistics
-        self.print_statistics(time_taken)
-            
-        return time_taken, self.moves 
+        print("Visited cells percentage: "
+              f"{sum(sum(row) for row in self.visited)/(self.maze.width*self.maze.height)*100:.1f}%")
+        print("============================================")
