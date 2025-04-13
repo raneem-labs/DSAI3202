@@ -56,6 +56,8 @@ def compare_results(results):
 
 def main():
     parser = argparse.ArgumentParser(description="Maze Runner Game with Parallel Explorers")
+    parser.add_argument("--optimized", action="store_true",
+                       help="Use optimized solver algorithm")
     parser.add_argument("--type", choices=["random", "static"], default="random",
                        help="Type of maze to generate (random or static)")
     parser.add_argument("--width", type=int, default=30,
@@ -70,38 +72,50 @@ def main():
                        help="Number of parallel explorers to run (default: 4)")
     
     args = parser.parse_args()
-    
+
     if args.auto:
         if args.visualize and args.explorers > 1:
             print("Warning: Visualization disabled for multiple explorers")
             args.visualize = False
         
-        if args.explorers == 1:
+        maze = create_maze(args.width, args.height, args.type)
+        
+        if args.optimized:
+            # Use optimized solver (single explorer only)
+            if args.explorers > 1:
+                print("Warning: Optimized solver doesn't support multiple explorers. Using 1 explorer.")
+            explorer = OptimizedSolver(maze, visualize=args.visualize)
+            time_taken, moves = explorer.solve()
+            
+            print(f"\nOptimized solution found in {len(moves)} moves")
+            if args.type == "static":
+                if len(moves) <= 130:
+                    print("SUCCESS: Solved static maze in 130 moves or less!")
+                else:
+                    print(f"Challenge not met: {len(moves)} moves (target: ≤130)")
+            print(f"Time taken: {time_taken:.2f} seconds")
+            
+        elif args.explorers == 1:
             # Single explorer mode (original behavior)
-            maze = create_maze(args.width, args.height, args.type)
             explorer = Explorer(maze, visualize=args.visualize)
             time_taken, moves = explorer.solve()
             print(f"Maze solved in {time_taken:.2f} seconds")
             print(f"Number of moves: {len(moves)}")
             if args.type == "static":
                 print("Note: Width and height arguments were ignored for the static maze")
+                
         else:
-            # Parallel explorers mode
+            # Parallel explorers mode (original implementation)
             print(f"Running {args.explorers} explorers in parallel...")
-            
-            # Prepare arguments for each explorer
             explorer_args = [(args.type, args.width, args.height, i+1) 
                            for i in range(args.explorers)]
             
-            # Create a pool of workers
             with Pool(processes=min(args.explorers, cpu_count())) as pool:
                 results = pool.map(run_explorer, explorer_args)
             
-            # Compare and display results
             compare_results(results)
     else:
         # Run the interactive game
         run_game(maze_type=args.type, width=args.width, height=args.height)
-
 if __name__ == "__main__":
     main()
