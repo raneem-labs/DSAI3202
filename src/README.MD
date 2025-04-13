@@ -1,4 +1,4 @@
-Question 1: Description of the Automated Maze Explorer
+#Question 1: Description of the Automated Maze Explorer
 
  1. Algorithms Followed with the Explorer
 The enhanced maze explorer applies the right-hand rule algorithm yet includes backtracking and loop detection features. The process works like this:
@@ -68,7 +68,7 @@ Running 4 explorers in parallel...
 - Explorer 4 had the most backtrack operations (4)
 - All explorers maintained consistent speed (~43-46 moves/second)
 
-Q.4: 
+#Q.4: 
 performance Comparison
 
 After implementing these enhancements, I ran both the original and enhanced explorers on the static maze:
@@ -97,7 +97,7 @@ Adaptable Conduct:
 It is possible to adjust turn bias and randomness factors.
 Adapts automatically to various maze types
 
-Q5: 
+#Q5: 
 performance Comparison: Original vs Enhanced Maze Explorer
 Test Methodology
 
@@ -192,28 +192,30 @@ Shows distribution of results across multiple runs
 Flexible Output:
 Saves visualizations to PNG files
 
-To use these new visualizations:
+#To use these new visualizations:
 from visualization import compare_explorers, plot_performance_metrics
 
- After running both explorers
+After running both explorers
 compare_explorers(original_explorer.moves, enhanced_explorer.moves, maze)
 
  After multiple runs
 plot_performance_metrics(original_stats_list, enhanced_stats_list)
 
-----------
 The visualizations will help clearly demonstrate the performance differences between the original and enhanced explorers, showing both the paths taken and the statistical distributions of key metrics.
 
-bonus points: 
+#bonus points: 
+
 performance benchmarking: 
+
 Run 100 times to verify top 10% performance
+
 for i in {1..100}; do python main.py --type static --optimized --auto; done | grep "moves"
 
 Backtrack Verification:
 python main.py --type static --optimized --auto | grep "backtrack"
  Should always show "Number of backtrack operations: 0"
 
-Expected Output:
+#Expected Output:
 Optimized solution found in 122 moves
 SUCCESS: Solved static maze in 130 moves or less!
 Number of backtrack operations: 0
