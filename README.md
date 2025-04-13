@@ -392,6 +392,13 @@ Your answer should include:
 2. Solve the static maze in 135 moves or less to get 15 points.
 3. Solve the static maze in 130 moves or less to get 100% in your assignment.
 
+ ## Challenge Solution
+
+To solve the static maze in 130 moves or less (for full assignment marks):
+
+```bash
+python main.py --type static --optimized --auto 
+
 ### Bonus points
 1. Fastest solver to get top  10% routes (number of moves)
 2. Finding a solution with no backtrack operations
