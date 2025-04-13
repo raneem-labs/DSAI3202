@@ -1,4 +1,4 @@
-#Question 1: Description of the Automated Maze Explorer
+#Question 1: Description of the Automated Maze Explorer.
 
  1. Algorithms Followed with the Explorer
 The enhanced maze explorer applies the right-hand rule algorithm yet includes backtracking and loop detection features. The process works like this:
