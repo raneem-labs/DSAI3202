@@ -54,13 +54,19 @@ Statistics: For performance analysis, measures speed, time, moves, and backtrack
 sample output of comparison:
 Running 4 explorers in parallel...
 
-##=== Exploration Results Comparison ===
-##Explorer   Time (s)   Moves      Backtracks  Moves/s   
-##1          12.45      542        3           43.53     
-##2          11.23      512        1           45.59     
-##3          10.87      498        0           45.82     
-##4          13.21      567        4           42.92     
-##=====================================
+## Performance Comparison Results
+
+| Explorer | Time (s) | Moves | Backtracks | Moves/s |
+|----------|----------|-------|------------|---------|
+| 1        | 12.45    | 542   | 3          | 43.53   |
+| 2        | 11.23    | 512   | 1          | 45.59   |
+| 3        | 10.87    | 498   | 0          | 45.82   |
+| 4        | 13.21    | 567   | 4          | 42.92   |
+
+**Key Observations:**
+- Explorer 3 performed best with fastest time (10.87s) and fewest moves (498)
+- Explorer 4 had the most backtrack operations (4)
+- All explorers maintained consistent speed (~43-46 moves/second)
 
 Q.4: 
 performance Comparison
