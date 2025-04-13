@@ -260,14 +260,35 @@ Modify the main program to run multiple maze explorers simultaneously. This is b
 3. Implement task distribution
 4. Create a results comparison system
    results compariosn: Running 4 explorers in parallel...
+   
+##  Explorer Performance Comparison
 
-=== Exploration Results Comparison ===
-Explorer   Time (s)   Moves      Backtracks  Moves/s   
-1          12.45      542        3           43.53     
-2          11.23      512        1           45.59     
-3          10.87      498        0           45.82     
-4          13.21      567        4           42.92     
-=====================================
+| Explorer | Time (s) | Moves | Backtracks | Moves/s | Performance |
+|----------|----------|-------|------------|---------|-------------|
+| 1        | 12.45    | 542   | 3          | 43.53   | ⭐⭐       |
+| 2        | 11.23    | 512   | 1          | 45.59   | ⭐⭐⭐      |
+| 3        | 10.87    | 498   | 0          | 45.82   | ⭐⭐⭐⭐    |
+| 4        | 13.21    | 567   | 4          | 42.92   | ⭐         |
+
+### Key Insights
+- **Best Performer**: Explorer #3
+  - Fastest time (10.87s)
+  - Fewest moves (498)
+  - Zero backtrack operations
+- **Efficiency**: All explorers maintained 43-46 moves/second
+- **Consistency**: Move counts ranged 498-567 (12% variance)
+
+
+<details>
+<summary>📊 Raw Data Details</summary>
+
+```python
+performance_data = {
+    "explorer_1": {"time": 12.45, "moves": 542, "backtracks": 3, "speed": 43.53},
+    "explorer_2": {"time": 11.23, "moves": 512, "backtracks": 1, "speed": 45.59},
+    "explorer_3": {"time": 10.87, "moves": 498, "backtracks": 0, "speed": 45.82},
+    "explorer_4": {"time": 13.21, "moves": 567, "backtracks": 4, "speed": 42.92}
+}
 
 ### Question 3 (10 points)
 Analyze and compare the performance of different maze explorers on the static maze. Your analysis should:
@@ -339,7 +360,8 @@ These could identify more efficient routes, but the computational costs would va
 Based on your analysis from Question 3, propose and implement enhancements to the maze explorer to overcome its limitations. Your solution should:
 
 1. Identify and explain the main limitations of the current explorer:
- answer:  (A) Deterministic Pathing The current explorer strictly adheres to the right-hand rule at all times, which:consistently generates the same answers for the same maze
+
+answer:  (A) Deterministic Pathing The current explorer strictly adheres to the right-hand rule at all times, which:consistently generates the same answers for the same maze
 Unable to locate alternate, possibly shorter routes. In some maze configurations, it becomes trapped in endless loops.
 b) No Recollection of Cell Visits. The explorer:
 Unable to recall previously visited cells
@@ -413,7 +435,7 @@ Note: The --auto flag is required for automated solving
 ```python
 from explorer import OptimizedSolver
 
-### Bonus points
+### Bonus points (i solved and explained in readme file inside src)
 1. Fastest solver to get top  10% routes (number of moves)
 2. Finding a solution with no backtrack operations
 3. Least number of moves.
